@@ -4,6 +4,7 @@ temporary/
 TODO
 
 # Haskell
+.ghc.environment.*
 .styx/
 cabal.project.local
 dist-newstyle/
