@@ -125,13 +125,17 @@ library
   -- Web
   --------------------
 
+  , data-msgpack
+  , data-msgpack-types
+  -- import qualified "data-msgpack" Data.MessagePack as MP
+
   , servant-client         >= 0.14
   , servant-server         >= 0.14
-  , servant-matrix-param
+ -- , servant-matrix-param
   
-  , servant-py
-  , servant-js
-  , servant-nix
+ -- , servant-py
+ -- , servant-js
+ -- , servant-nix
 
   --------------------
   -- (miscellaneous packages)
@@ -283,8 +287,6 @@ library
    -- harmful to inference
    -- GADTs RankNTypes
    -- (miscellaneous)
-
-
 
 ----------------------------------------
 -- TESTS...

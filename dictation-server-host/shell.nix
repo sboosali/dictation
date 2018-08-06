@@ -1,30 +1,12 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default", doBenchmark ? false, doCheck ? false }:
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc861"  -- "default"
+, doBenchmark ? false, doCheck ? false 
+}:
 
 let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, bytestring, containers, deepseq
-      , doctest, exceptions, hashable, lens, mtl, servant-client
-      , servant-js, servant-matrix-param, servant-nix, servant-py
-      , servant-server, spiros, stdenv, text, transformers
-      , unordered-containers
-      }:
-      mkDerivation {
-        pname = "dictation-server-windows";
-        version = "0.0.0";
-        src = ./.;
-        libraryHaskellDepends = [
-          base bytestring containers deepseq exceptions hashable lens mtl
-          servant-client servant-js servant-matrix-param servant-nix
-          servant-py servant-server spiros text transformers
-          unordered-containers
-        ];
-        testHaskellDepends = [ base doctest ];
-        homepage = "http://github.com/sboosali/dictation-server-windows#readme";
-        description = "TODO";
-        license = stdenv.lib.licenses.bsd3;
-      };
+  f = import ./.;
 
   haskellPackages = if compiler == "default"
                        then pkgs.haskellPackages
@@ -33,7 +15,10 @@ let
   bench = if doBenchmark then pkgs.haskell.lib.doBenchmark else pkgs.lib.id;
   test  = if doCheck     then pkgs.haskell.lib.doCheck     else pkgs.lib.id;
 
-  drv = bench (test (haskellPackages.callPackage f {}));
+  drv = bench (test (haskellPackages.callPackage f {
+   servant-server = haskellPackages.servant-server_0_14;
+   servant-client = haskellPackages.servant-client_0_14;
+  }));
 
 in
 
