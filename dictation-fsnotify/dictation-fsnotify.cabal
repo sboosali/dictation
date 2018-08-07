@@ -241,9 +241,9 @@ library
  ------------------------------
  exposed-modules:
 
-  Dictation
-  Dictation.Types
   Dictation.FSNotify
+  Dictation.FSNotify.Types
+  Dictation.FSNotify.Run
 
   -- Dictation.NotifyServer.NatlinkInput.XdotoolOutput
   -- Dictation.FromNatlink.ViaFiles.IntoXdotool
@@ -287,7 +287,9 @@ library
    -- filesystem libraries.
    --------------------
   , fsnotify
-
+  , time
+  , thyme
+  
    --------------------
    -- JSON libraries.
    --------------------
