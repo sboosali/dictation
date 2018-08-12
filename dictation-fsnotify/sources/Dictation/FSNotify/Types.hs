@@ -20,13 +20,7 @@ import qualified "fsnotify" System.FSNotify  as FSNotify
 --import qualified "time"     Data.Time.Clock  as Time
 import qualified "thyme"    Data.Thyme.Clock as Thyme
 
---------------------------------------------------
-
-
-
---------------------------------------------------
-
-
+import "contravariant" Data.Functor.Contravariant
 
 --------------------------------------------------
 
@@ -35,14 +29,19 @@ import qualified "thyme"    Data.Thyme.Clock as Thyme
 
 -}
 
-data FSNotifyConfig = FSNotifyConfig
+data FileNotificationConfiguration = FileNotificationConfiguration
 
-  { notificationPredicate :: FSNotify.ActionPredicate
-  , notificationHandler   :: FSNotify.Action
+  { notificationPredicate :: Predicate FileNotification  -- FSNotify.ActionPredicate
+  , notificationHandler   :: FileNotification -> IO ()   -- FSNotify.Action
   , directoryWatched      :: FilePath
   }
 
   deriving stock    (Generic)
+
+--------------------------------------------------
+
+-- newtype NotificationPredicate = NotificationPredicate
+--   (FileNotification -> Bool)
 
 --------------------------------------------------
 

@@ -89,5 +89,11 @@ A predicate used to determine whether to act on an event.
 >   :: WatchManager -> FilePath -> ActionPredicate -> Action -> IO StopListening
 
 
+watchDirChan :: WatchManager -> FilePath -> ActionPredicate -> EventChannel -> IO StopListening
+
+
+watchTree :: WatchManager -> FilePath -> ActionPredicate -> Action -> IO StopListening
+
+
 
 -}

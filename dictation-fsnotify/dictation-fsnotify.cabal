@@ -255,11 +255,13 @@ library
 
 -- Paths_dictation_fsnotify
 
+  Internal.Dictation.FSNotify
+
  ------------------------------
  ------------------------------
  build-depends:
 
-   --------------------
+  --------------------
   -- boot-libraries & standard-library packages,
   --------------------
     base >=4.10 && <5
@@ -282,6 +284,11 @@ library
   , spiros
   -- , enumerate
   -- , enumerate-function
+
+   --------------------
+   -- ekmett's libraries.
+   --------------------
+  , contravariant
 
    --------------------
    -- filesystem libraries.

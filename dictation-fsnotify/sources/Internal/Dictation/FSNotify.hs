@@ -1,13 +1,12 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 
 --------------------------------------------------
 
-module Dictation.FSNotify.Run where
+module Internal.Dictation.FSNotify where
 
 --------------------------------------------------
 
 import Prelude_dictation_fsnotify
-
-import Internal.Dictation.FSNotify
 
 --------------------------------------------------
 
@@ -19,22 +18,15 @@ import qualified "fsnotify" System.FSNotify as FS
 
 --------------------------------------------------
 
-main =
-
-  FS.withManagerConf FS.defaultConfig $ \manager -> do
-
-    -- start a watching job (in the background)
-    FS.watchDir
-      manager          --
-      "."          -- directory to watch
-      (const True) -- predicate
-      print        -- action
-
-    -- sleep forever (until interrupted)
-    forever $ threadDelay 1000000
+watchDirectoryRecursively
+  :: FS.WatchManager
+  -> FileNotificationConfiguration
+  -> IO FS.StopListening
+watchDirectoryRecursively manager FileNotificationConfiguration{..}
+  = FS.watchTree manager directory notificationPredicate notificationHandler
 
 --------------------------------------------------
 
-
+ 
 
 --------------------------------------------------
