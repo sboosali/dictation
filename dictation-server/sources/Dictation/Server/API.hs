@@ -43,7 +43,7 @@ import qualified "time" Data.Time as Time (UTCTime)
 
 --------------------------------------------------
 
-import qualified "base"      System.Exit      as IO
+--import qualified "base"      System.Exit      as IO
 import qualified "directory" System.Directory as IO
 --import qualified "base"      System.IO        as IO
 

@@ -254,6 +254,7 @@ library
    Dictation.Server
    Dictation.Server.Types
    Dictation.Server.API
+   Dictation.Server.SQL
 
  other-modules:
    Prelude_dictation_server
@@ -319,7 +320,7 @@ library
   -- Database / Filesystem packages
   --------------------
 
-  , sqlite-simple
+  , sqlite-simple  >= 0.4.16
   , directory
   
   
