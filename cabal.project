@@ -34,8 +34,6 @@ package wai-app-static
 package warp
   extra-lib-dirs: /home/sboo/.nix-profile/lib/
 
-
-
 -- package _
 --   extra-lib-dirs: /home/sboo/.nix-profile/lib/
 
