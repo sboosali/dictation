@@ -43,6 +43,12 @@ import qualified "time" Data.Time as Time (UTCTime)
 
 --------------------------------------------------
 
+import qualified "base"      System.Exit      as IO
+import qualified "directory" System.Directory as IO
+--import qualified "base"      System.IO        as IO
+
+--------------------------------------------------
+
 -- import Control.Exception      (bracket)
 -- import Control.Monad.IO.Class
 
@@ -71,8 +77,6 @@ data User = User
 
 --------------------------------------------------
 
---------------------------------------------------
-
 {-|
 
 -}
@@ -95,15 +99,31 @@ instance IsString Message where
 -}
 main :: IO ()
 main = do
-  let dbfile = "db/"
+  let dbfile = "./db/messages.db"
+  
+  mkdir "./db"
+
+  p_dbfile <- IO.canonicalizePath dbfile
+  print $ p_dbfile
+
+  p_sqlite <- IO.findExecutable "sqlite3"
+  print $ p_sqlite
   
   initDB dbfile
+
+  --TODO _ <- IO.exitSuccess
   
   postMessage dbfile `traverse_`
     [ "first message", "second message", "third message" ]
   
   messages <- getMessages dbfile
   print `traverse_` messages
+
+--------------------------------------------------
+
+-- | @mkdir -p@
+mkdir :: FilePath -> IO ()
+mkdir = IO.createDirectoryIfMissing True
 
 --------------------------------------------------
 

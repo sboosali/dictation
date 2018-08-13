@@ -27,7 +27,8 @@ repl:
 # 	cabal new-build all
 
 ####################
-rebuild: clean update configure build docs
+execute:
+	cabal new-run dictation-server-example
 
 ####################
 clean:
@@ -36,6 +37,11 @@ clean:
 
 ##################################################
 ##################################################
+
+####################
+rebuild: clean update configure build docs
+
+####################
 build: check compile
 
 ####################

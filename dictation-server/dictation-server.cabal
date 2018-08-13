@@ -81,6 +81,13 @@ source-repository head
 ----------------------------------------
 common haskell2020
 
+ build-depends:
+  base >=4.8 && <5.0
+  -- ^ all components must agree on `base`.
+  -- by sharing this `build-depends` fragment,
+  -- across components, via this `common` stanza,
+  -- we both guarantee it and make it more convenience.
+
  default-language:
    Haskell2010
 
@@ -257,24 +264,23 @@ library
 
  build-depends:
 
- --------------------
- -- boot libraries / "standard" library
- --------------------
-
-    base >=4.7 && <5
-  , text 
-  , bytestring
-  , transformers
-  , mtl
-  , containers
-
   --------------------
   -- my packages
   -- (sboosali on github, sboo on hackage)
   --------------------
 
-  , spiros >=0.2
+    spiros >=0.2
   -- , enumerate >=0.2 
+
+ --------------------
+ -- boot libraries / "standard" library
+ --------------------
+
+  , text 
+  , bytestring
+  , transformers
+  , mtl
+  , containers
 
   --------------------
   -- "extended" standard library 
@@ -310,11 +316,13 @@ library
   , aeson
 
   --------------------
-  -- Database packages
+  -- Database / Filesystem packages
   --------------------
 
   , sqlite-simple
-
+  , directory
+  
+  
   --------------------
   -- Concurrency packages
   --------------------
@@ -349,5 +357,21 @@ library
   , time
 
   --------------------
+
+---------------------------------------
+-- EXECUTABLES
+----------------------------------------
+
+executable dictation-server-example
+ import: haskell2020
+
+ ghc-options:
+             -Wno-missing-signatures
+ 
+ main-is:        Example.hs
+ hs-source-dirs: executables
+ 
+ build-depends:
+               dictation-server
 
 ----------------------------------------
