@@ -1,19 +1,15 @@
 ----------------------------------------
 packages:
 
- ./dictation-fsnotify/
-
- -- ./dictation-server-guest/
- -- ./dictation-server-host/
-
- -- ./dictation-server-host-x11/
- -- ./dictation-server-host-PLATFORM/
-
- -- ./dictation-server-/
+ ./dictation-server
 
 ----------------------------------------
 optional-packages:
 
   ../spiros/
+
+----------------------------------------
+
+
 
 ----------------------------------------
