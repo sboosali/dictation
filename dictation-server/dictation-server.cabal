@@ -71,10 +71,174 @@ source-repository head
 ----------------------------------------
 -- FLAGS
 
+-- flag ...
+--   default:     False
+--   description: Enable ...
+--   manual:      True
+
 ----------------------------------------
+-- COMMON_STANZAS
+----------------------------------------
+common haskell2020
+
+ default-language:
+   Haskell2010
+
+ ------------------------------
+ ------------------------------
+ ghc-options:
+
+  --------------------
+  -- warning groups
+  --------------------
+
+  -Wall
+
+  --------------------
+  -- disabled warnings
+  --------------------
+
+  -Wno-unticked-promoted-constructors
+
+  --------------------
+  -- enabled warnings
+  --------------------
+
+  -- enable
+  -Wincomplete-uni-patterns
+  -Wincomplete-record-updates
+  -Widentities
+  -Wmissing-methods
+  -fwarn-tabs
+ 
+  --------------------
+  -- typed-holes
+  --------------------
+
+  -- use `typed-holes`, not `undefined`, during development
+
+  -fdefer-typed-holes
+  -Wtyped-holes
+
+  --------------------
+  -- (miscellaneous warnings)
+  --------------------
+
+  -- raise a warning into an error
+  -- -Werror=missing-fields
+
+ if impl(ghc >= 8.0)
+    ghc-options:
+
+        --------------------
+        -- warning groups
+        --------------------     
+
+        -Wcompat
+      
+        --------------------
+        -- enabled warnings
+        --------------------
+
+        -Wnoncanonical-monad-instances
+        -Wnoncanonical-monadfail-instances
+
+ ------------------------------
+ ------------------------------
+
+ default-extensions:
+
+   --------------------
+   -- "controversial"
+   --------------------
+   NoImplicitPrelude
+
+   --------------------
+   -- `deriving`
+   --------------------
+   AutoDeriveTypeable
+   DeriveDataTypeable
+   DeriveGeneric
+   DeriveFunctor
+   DeriveFoldable
+   DeriveTraversable
+   DeriveLift
+   StandaloneDeriving
+
+   DerivingStrategies
+   DeriveAnyClass
+   GeneralizedNewtypeDeriving
+
+   --------------------
+   -- syntax
+   --------------------
+   PackageImports
+   LambdaCase
+   EmptyCase
+   TypeOperators
+   PostfixOperators
+   BangPatterns
+   KindSignatures
+   NamedFieldPuns
+   RecordWildCards
+   TupleSections
+   MultiWayIf
+   DoAndIfThenElse
+   EmptyDataDecls
+   InstanceSigs
+   
+   --------------------
+   -- typeclasses
+   --------------------
+   MultiParamTypeClasses
+   FlexibleContexts
+   FlexibleInstances
+   TypeFamilies
+   FunctionalDependencies
+
+   --------------------
+   -- patterns
+   --------------------
+   ViewPatterns
+   PatternSynonyms
+
+   --------------------
+   -- (miscellaneous)
+   --------------------
+   ScopedTypeVariables
+
+ other-extensions:
+
+   --------------------
+   -- macros
+   --------------------
+   TemplateHaskell
+   -- QuasiQuotes
+
+   --------------------
+   -- syntax (of literals)
+   --------------------
+   OverloadedStrings
+   OverloadedLists
+
+   --------------------
+   -- (miscellaneous)
+   --------------------
+
+   -- RebindableSyntax
+   -- kinds:
+   -- DataKinds ConstraintKinds
+   -- harmful to inference:
+   -- GADTs RankNTypes
+   -- (miscellaneous)
+
+---------------------------------------
 -- LIBRARY
+----------------------------------------
 
 library
+
+ import: haskell2020
 
  hs-source-dirs:
    sources
@@ -119,13 +283,12 @@ library
   , deepseq
   , hashable
   , unordered-containers
+  , exceptions
 
   --------------------
   -- ekmett 
   --------------------
 
-  , exceptions
-  , lens
   , bifunctors
   , profunctors
   , reducers
@@ -163,8 +326,7 @@ library
   -- Parsing / Formatting packages
   --------------------
 
-  , wl-pprint-text
-  , prettyprinter 
+  , ansi-wl-pprint
              
   --------------------
   -- Python-related packages
@@ -173,153 +335,19 @@ library
 --  , language-python
     -- (^ not on Stackage.)
 
+   --------------------
+   -- records libraries.
+   --------------------
+  , lens
+  , generic-lens
+  , vinyl
+
   --------------------
   -- (miscellaneous packages)
   --------------------
 
   , time
 
- ghc-options:
-
   --------------------
-  -- warning groups
-  --------------------
-
-  -Wall
-
-  --------------------
-  -- disabled warnings
-  --------------------
-
-  -Wno-unticked-promoted-constructors
-
-  --------------------
-  -- enabled warnings
-  --------------------
-
-  -- enable
-  -Wincomplete-uni-patterns
-  -Wincomplete-record-updates
-  -Widentities
-  -Wmissing-methods
-  -fwarn-tabs
- 
-  --------------------
-  -- typed-holes
-  --------------------
-
-  -- use `typed-holes`, not `undefined`, during development
-
-  -fdefer-typed-holes
-  -Wtyped-holes
-
-  --------------------
-  -- (miscellaneous warnings)
-  --------------------
-
-  -- raise a warning into an error
-  -- -Werror=missing-fields
-
-
- if impl(ghc >= 8.0)
-    ghc-options:
-
-        --------------------
-        -- warning groups
-        --------------------     
-        -Wcompat
-      
-        --------------------
-        -- enabled warnings
-        --------------------
-        -Wnoncanonical-monad-instances
-        -Wnoncanonical-monadfail-instances
-
-        --------------------
-
-
- default-language: Haskell2010
-
- default-extensions:
-
-   --------------------
-   -- "controversial"
-   --------------------
-   NoImplicitPrelude
-   -- NOTE thus every module implicitly has -XNoImplicitPrelude
-   
-   --------------------
-   -- deriving
-   --------------------
-   AutoDeriveTypeable
-   DeriveDataTypeable
-   DeriveGeneric
-   DeriveFunctor
-   DeriveFoldable
-   DeriveTraversable
-   DeriveLift
-   StandaloneDeriving
-
-   --------------------
-   -- syntax
-   --------------------
-   PackageImports
-   LambdaCase
-   EmptyCase
-   TypeOperators
-   PostfixOperators
-   BangPatterns
-   KindSignatures
-   NamedFieldPuns
-   RecordWildCards
-   TupleSections
-   MultiWayIf
-   DoAndIfThenElse
-   EmptyDataDecls
-   InstanceSigs
-   
-   --------------------
-   -- typeclasses
-   --------------------
-   MultiParamTypeClasses
-   FlexibleContexts
-   FlexibleInstances
-   TypeFamilies
-   FunctionalDependencies
-
-   --------------------
-   -- patterns
-   --------------------
-   ViewPatterns
-   PatternSynonyms
-
-   --------------------
-   -- (miscellaneous extensions)
-   --------------------
-   ScopedTypeVariables
-
- other-extensions:
-
-   --------------------
-   -- macros
-   --------------------
-   TemplateHaskell
-   -- QuasiQuotes
-
-   --------------------
-   -- syntax (of literals)
-   --------------------
-   OverloadedStrings
-   OverloadedLists
-
-   --------------------
-   -- (miscellaneous extensions)
-   --------------------
-   -- RebindableSyntax
-   -- kinds
-   -- DataKinds ConstraintKinds
-   -- harmful to inference
-   -- GADTs RankNTypes
-   -- (miscellaneous)
 
 ----------------------------------------
