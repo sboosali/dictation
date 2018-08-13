@@ -6,7 +6,7 @@
 
 
 -}
-module Dictation.Servers.Types where
+module Dictation.Server.Types where
 
 --------------------------------------------------
 
