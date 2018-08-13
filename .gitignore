@@ -38,6 +38,9 @@ result/
 TAGS
 .projectile
 
+# Databases
+*.db
+
 # OS X
 .DS_Store
 
