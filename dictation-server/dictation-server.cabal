@@ -1,34 +1,44 @@
-name:                dictation-server-windows
-version:             0.0.0
-cabal-version:       >=1.24
-
--- `x-revision` must be incremented on every hackage metadata revision. 
--- `x-_` means "an extension field". 
--- x-revision: 0
+cabal-version:       2.2
+                     -- for indefinite-modules and "common stanzas".
 
 ----------------------------------------
 
-build-type:          Simple 
-category:            Data 
-synopsis:            TODO 
-description:         
- .
- TODO
- . 
+name:                dictation-server
+version:             0.0.0
 
-homepage:            http://github.com/sboosali/dictation-server-windows#readme
-bug-reports:         http://github.com/sboosali/dictation-server-windows/issues
+----------------------------------------
+
+synopsis:
+        Dragon NaturallySpeaking on Linux
+
+description:
+            A server that "forwards" speech recognitions from Dragon NaturallySpeaking,
+            which is running in a Windows virtual-machine (e.g. via @VirtualBox@).
+            The client is a @Natlink@ script that sends (simple) @HTTP@/@JSON@ requests.
+            The server receives and parses each speech recognition, executing them on any @X11@
+            system, by either: inserting the text literally; or performing various "automation"
+            actions like simulating keyboard shortcuts and mouse clicks, accessing the clipboard,
+            manipulating windows and workspaces, and so on.
+
+category: Accessibility, Automation, Dictation, Speech Recognition, Voice Control
+
+----------------------------------------
+
+build-type:          Simple
+homepage:            http://github.com/sboosali/dictation#readme
+bug-reports:         http://github.com/sboosali/dictation/issues
 author:              Spiros Boosalis
 maintainer:          Spiros Boosalis <samboosalis@gmail.com>
 copyright:           2018 Spiros Boosalis
-license:             BSD3
+license:             GPL-3.0-or-later
 license-file:        LICENSE.txt
-stability:           provisional
+stability:           experimental
 tested-with:
   -- GHC == 7.10.3
   -- GHC == 8.0.2
-  GHC == 8.2.2
-  -- GHC == 8.4.3
+  -- GHC == 8.2.2
+     GHC == 8.4.3
+  -- GHC == 8.6.1
 
 ----------------------------------------
 
@@ -45,13 +55,13 @@ extra-source-files:
 
 source-repository head
   type:     git
-  location: git://github.com/sboosali/dictation-server-windows.git
-  -- subdir: dictation-server-windows
+  location: git://github.com/sboosali/dictation.git
+  -- subdir: dictation-server
 
 -- source-repository this
 --   type:     git
---   location: https://github.com/sboosali/dictation-server-windows/tree/v0.1.0
--- -- subdir: dictation-server-windows
+--   location: https://github.com/sboosali/dictation/tree/v0.1.0
+-- -- subdir: dictation-server
 -- 
 -- -- Update the `source-repository` for `this` package version on every release
 -- -- (i.e. every hackage upload or metadata revision).  
@@ -68,22 +78,18 @@ library
 
  hs-source-dirs:
    sources
-   examples
-
 
  exposed-modules:
-   Dictation.Servers.Windows
-   Dictation.Servers.Windows.Types
-
-   Example.Dictation.Servers.Windows
+   Dictation.Server
+   Dictation.Server.Types
+   Dictation.Server.API
 
  other-modules:
-   Prelude.Dictation.Servers.Windows
-   -- Paths_dictation_server_windows
+   Prelude_dictation_server
+   -- Paths_dictation_server
 
  -- autogen-modules:
-   -- Paths_dictation_server_windows
-
+   -- Paths_dictation_server
 
  build-depends:
 
@@ -120,14 +126,46 @@ library
 
   , exceptions
   , lens
+  , bifunctors
+  , profunctors
+  , reducers
+
+  --------------------
+  -- `servant` packages
+  --------------------
+
+  , servant
+  , servant-server
+  , servant-foreign
+
+  , aeson
+
+  --------------------
+  -- Concurrency packages
+  --------------------
+
+  , async
+  , parallel
+
+  --------------------
+  -- Parsing / Formatting packages
+  --------------------
+
+  , wl-pprint-text
+  , prettyprinter 
+             
+  --------------------
+  -- Python-related packages
+  --------------------
+
+--  , language-python
+    -- (^ not on Stackage.)
 
   --------------------
   -- (miscellaneous packages)
   --------------------
 
   -- ,
-
-
 
  ghc-options:
 
@@ -271,35 +309,5 @@ library
    -- harmful to inference
    -- GADTs RankNTypes
    -- (miscellaneous)
-
-
-
-----------------------------------------
--- TESTS...
-
-----------------------------------------
-
-test-suite doctest
- if (impl(ghcjs))
-    buildable: False
-
- hs-source-dirs:      test
- main-is:             DocTests.hs
- type:                exitcode-stdio-1.0
-
- default-language:    Haskell2010
- ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
-
- build-depends:
-    base
-  , dictation-server-windows
-  , doctest
-
-----------------------------------------
--- NOTES
-
--- originally generated from the `spirosboosalis-simple.hsfiles` template, with `stack new`:
--- 
--- $ stack new dictation-server-windows https://raw.githubusercontent.com/sboosali/configuration/master/stack/templates/spirosboosalis.hsfiles 
 
 ----------------------------------------

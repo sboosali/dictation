@@ -1,15 +1,42 @@
-----------------------------------------
+--------------------------------------------------
 packages:
 
  ./dictation-server
 
-----------------------------------------
+--------------------------------------------------
 optional-packages:
 
   ../spiros/
 
-----------------------------------------
+--------------------------------------------------
+
+haddock-hyperlink-source: True
+
+optimization: 0
+
+jobs: $ncpus
+
+--------------------------------------------------
+
+extra-lib-dirs: /home/sboo/.nix-profile/lib/
+
+--------------------------------------------------
+
+package wai
+  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+
+package wai-extra
+  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+
+package wai-app-static
+  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+
+package warp
+  extra-lib-dirs: /home/sboo/.nix-profile/lib/
 
 
 
-----------------------------------------
+-- package _
+--   extra-lib-dirs: /home/sboo/.nix-profile/lib/
+
+--------------------------------------------------

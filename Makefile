@@ -20,7 +20,7 @@ compile:
 
 ####################
 repl:
-	cabal new-repl dictation-fsnotify
+	cabal new-repl dictation-server
 
 # ####################
 # install:
@@ -52,7 +52,7 @@ build-docs: compile
 copy-docs: build-docs
 	rm -fr ".sboo/documentation/"
 	mkdir -p ".sboo/documentation/"
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/dictation-fsnotify-*/noopt/doc/html/dictation-fsnotify/* ".sboo/documentation/"
+	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/dictation-server-*/noopt/doc/html/dictation-server/* ".sboo/documentation/"
 
 ########################
 open-docs: copy-docs
@@ -63,7 +63,7 @@ open-docs: copy-docs
 #           open ./dist-newstyle/build/*-*/ghc-*/*-*/noopt/doc/html/*/index.html
 #       rather than, e.g.:
 #
-#           xdg-open ./dist-newstyle/build/x86_64-linux/ghc-8.4.3/dictation-fsnotify-0.0/noopt/doc/html/dictation-fsnotify/index.html
+#           xdg-open ./dist-newstyle/build/x86_64-linux/ghc-8.4.3/dictation-server-0.0/noopt/doc/html/dictation-server/index.html
 #
 
 # ekmett:
