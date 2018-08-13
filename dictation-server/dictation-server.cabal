@@ -138,7 +138,19 @@ library
   , servant-server
   , servant-foreign
 
+  --------------------
+  -- Web packages
+  --------------------
+
+  , warp
+  , http-client
   , aeson
+
+  --------------------
+  -- Database packages
+  --------------------
+
+  , sqlite-simple
 
   --------------------
   -- Concurrency packages
@@ -165,7 +177,7 @@ library
   -- (miscellaneous packages)
   --------------------
 
-  -- ,
+  , time
 
  ghc-options:
 
