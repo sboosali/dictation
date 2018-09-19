@@ -26,12 +26,6 @@ build: check compile
 .PHONY: build
 
 #------------------------------------------------#
-
-# configure:
-# 	cabal --enable-nix new-configure --project-file ./cabal.project
-#
-
-#------------------------------------------------#
 check:
 	cabal new-build -fno-code -O0 all
 
@@ -49,12 +43,6 @@ repl:
 	cabal new-repl $(PackageName)
 
 .PHONY: repl
-
-# #------------------------------------------------#
-# install:
-# 	cabal new-build all
-
-# .PHONY: install
 
 #------------------------------------------------#
 execute:
@@ -78,6 +66,34 @@ all:
 	cabal new-test  all
 
 .PHONY: all
+
+#------------------------------------------------#
+
+configure: install-dependencies cabal-configure
+
+.PHONY: configure
+
+#------------------------------------------------#
+
+install: install-dependencies #TODO is "install" the right name.
+
+.PHONY: install
+
+#------------------------------------------------#
+
+install-dependencies:
+	nix-env -f ./nix/shell.nix -i
+
+#TODO? ./nix/environment/shell.nix
+
+.PHONY: install-dependencies
+
+#------------------------------------------------#
+
+cabal-configure:
+	cabal --enable-nix new-configure --project-file ./cabal.project
+
+.PHONY: cabal-configure
 
 #------------------------------------------------#
 package:

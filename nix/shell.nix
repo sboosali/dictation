@@ -1,33 +1,26 @@
-{ nixpkgs ? (import ./nixpkgs.nix)
-, compiler ? "default"
-, doBenchmark ? false
+##################################################
+{ nixpkgs ? (import ./nixpkgs)
 }:
 
+##################################################
 let
 
-  inherit (nixpkgs) pkgs;
+project     = import ./project.nix
+ { inherit nixpkgs;
+ };
 
-  f = (import ./dictation-server.nix);
+packages    = import ./packages.nix
+ { inherit nixpkgs;
+ };
 
-  exes = (import ./programs.nix { inherit pkgs; });
-
-  libs = (import ./libraries.nix { inherit pkgs; });
-
-  haskellPackages = if compiler == "default"
-                       then pkgs.haskellPackages
-                       else pkgs.haskell.packages.${compiler};
-
-  g = if doBenchmark then pkgs.haskell.lib.doBenchmark else pkgs.lib.id;
-
-  x = g (haskellPackages.callPackage f {});
-
-  y1 = pkgs.haskell.lib.addBuildTools x exes;
-  y2 = pkgs.haskell.lib.addExtraLibraries y1 libs;
-
-  y = y2;
-
-  z = if pkgs.lib.inNixShell then y.env else y;
+environment = import ./environment.nix
+ { inherit nixpkgs;
+   inherit project packages;
+ };
 
 in
+##################################################
 
-  z
+environment
+
+##################################################
