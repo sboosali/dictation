@@ -363,6 +363,19 @@ library
   , vinyl
 
   --------------------
+  -- Text
+  --------------------
+
+  , text-metrics
+
+  --------------------
+  -- Audio
+  --------------------
+
+  , wave
+  , flac
+
+  --------------------
   -- (miscellaneous packages)
   --------------------
 
@@ -374,7 +387,8 @@ library
 -- EXECUTABLES
 ----------------------------------------
 
-executable dictation-server-example
+executable dicto
+
  import: haskell2020
 
  ghc-options:

@@ -11,6 +11,8 @@ let
 
   exes = (import ./programs.nix { inherit pkgs; });
 
+  libs = (import ./libraries.nix { inherit pkgs; });
+
   haskellPackages = if compiler == "default"
                        then pkgs.haskellPackages
                        else pkgs.haskell.packages.${compiler};
@@ -19,7 +21,10 @@ let
 
   x = g (haskellPackages.callPackage f {});
 
-  y = pkgs.haskell.lib.addBuildTools x exes;
+  y1 = pkgs.haskell.lib.addBuildTools x exes;
+  y2 = pkgs.haskell.lib.addExtraLibraries y1 libs;
+
+  y = y2;
 
   z = if pkgs.lib.inNixShell then y.env else y;
 

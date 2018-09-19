@@ -1,4 +1,4 @@
-import qualified Dictation.Server.SQL--API
+import qualified Dictation.Server.CLI
 import Prelude
 main :: Prelude.IO ()
-main = Dictation.Server.SQL.main
+main = Dictation.Server.CLI.main

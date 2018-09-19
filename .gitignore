@@ -2,6 +2,7 @@
 ignore/ 
 temporary/ 
 TODO
+.sboo/
 
 # Haskell
 .ghc.environment.*

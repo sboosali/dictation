@@ -11,31 +11,31 @@ optional-packages:
 
 --------------------------------------------------
 
-haddock-hyperlink-source: True
-
-optimization: 0
-
 jobs: $ncpus
 
 --------------------------------------------------
 
-extra-lib-dirs: /home/sboo/.nix-profile/lib/
+tests:      False
+benchmarks: False
 
 --------------------------------------------------
 
-package wai
-  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+documentation:            True
+haddock-hyperlink-source: True
 
-package wai-extra
-  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+--------------------------------------------------
 
-package wai-app-static
-  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+extra-include-dirs: /home/sboo/.nix-profile/include/
+extra-prog-path:    /home/sboo/.nix-profile/bin/
+extra-prog-path:    /home/sboo/.nix-profile/libexec/
 
-package warp
-  extra-lib-dirs: /home/sboo/.nix-profile/lib/
+--------------------------------------------------
 
--- package _
---   extra-lib-dirs: /home/sboo/.nix-profile/lib/
+package *
+  extra-lib-dirs:     /home/sboo/.nix-profile/lib/
+  extra-include-dirs: /home/sboo/.nix-profile/include/
+  extra-prog-path:    /home/sboo/.nix-profile/bin/
+  extra-prog-path:    /home/sboo/.nix-profile/libexec/
 
 --------------------------------------------------

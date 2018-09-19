@@ -1,114 +1,163 @@
 ##################################################
+# Makefile Variables
 ##################################################
+
+BaseDirectory=$(CURDIR)
+
+#------------------------------------------------#
+
+ProjectName=dictation
+PackageName=dictation-server
+
+##################################################
+# the `default` target
+##################################################
+
 default: build
-
-####################
-.PHONY: default all check configure build clean dictation-server natlink docs update rebuild 
+.PHONY: default
 
 ##################################################
+# `cabal` wrapper targets
 ##################################################
+
+#------------------------------------------------#
+build: check compile
+
+.PHONY: build
+
+#------------------------------------------------#
+
 # configure:
 # 	cabal --enable-nix new-configure --project-file ./cabal.project
 #
-####################
+
+#------------------------------------------------#
 check:
 	cabal new-build -fno-code -O0 all
 
-####################
+.PHONY: check
+
+#------------------------------------------------#
 compile:
 	cabal new-build all
 
-####################
+.PHONY: compile
+
+#------------------------------------------------#
 repl:
 #TODO	cabal new-repl all
-	cabal new-repl natlink # dictation-server
+	cabal new-repl $(PackageName)
 
-# ####################
+.PHONY: repl
+
+# #------------------------------------------------#
 # install:
 # 	cabal new-build all
 
-####################
+# .PHONY: install
+
+#------------------------------------------------#
 execute:
-	cabal new-run dictation-server-example
+	cabal new-run $(PackageName)-example
 
-####################
-clean:
-	rm -rf dist/ dist-newstyle/ .sboo/
-	rm -f *.project.local .ghc.environment.*
+.PHONY: execute
+
+#------------------------------------------------#
+update:
+	cabal new-update
+
+.PHONY: update
 
 ##################################################
+# component targets (i.e. for `cabal new-build`)
 ##################################################
 
-####################
+#------------------------------------------------#
 all:
 	cabal new-build all
 	cabal new-test  all
 
-####################
-dictation-server:
-	cabal new-build dictation-server
-	cabal new-test  dictation-server
-	cabal new-run   dictation-server-example
+.PHONY: all
 
-####################
-natlink:
-	cabal new-build natlink
-	cabal new-test  natlink
+#------------------------------------------------#
+package:
+	cabal new-build $(PackageName)
+	cabal new-test  $(PackageName)
+	cabal new-run   $(PackageName)-example
+
+.PHONY: package
+
+#------------------------------------------------#
+dictation-server: package
+
+.PHONY: dictation-server
 
 ##################################################
+# my own build scripts (make things, move them)
 ##################################################
 
-####################
+#------------------------------------------------#
+clean:
+	rm -rf dist/ dist-newstyle/ .sboo/
+	rm -f *.project.local .ghc.environment.*
+
+.PHONY: clean
+
+#------------------------------------------------#
 rebuild: clean update configure build docs
 
-####################
-build: check compile
+.PHONY: rebuild
 
-####################
+#------------------------------------------------#
 tags: compile
 	mkdir -p .sboo/
 	fast-tags -o ".sboo/tags" -R .
 	cat ".sboo/tags"
 
-########################
+.PHONY: tags
+
+#------------------------------------------------#
 build-docs: compile
 	cabal new-haddock all
 
-########################
+.PHONY: build-docs
+
+#------------------------------------------------#
 copy-docs: build-docs
 	rm -fr ".sboo/documentation/"
 	mkdir -p ".sboo/documentation/"
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/natlink-*/noopt/doc/html/natlink/* ".sboo/documentation/natlink"
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/dictation-server-*/noopt/doc/html/dictation-server/* ".sboo/documentation/dictation-server"
+	cp -aRv ./dist-newstyle/build/*-*/ghc-*/$(PackageName)-*/noopt/doc/html/$(PackageName) ".sboo/documentation/$(PackageName)"
 
-########################
+.PHONY: copy-docs
+
+#------------------------------------------------#
 open-docs: copy-docs
 #TODO	xdg-open ".sboo/documentation/index.html"
-	xdg-open ".sboo/documentation/natlink/index.html"
-	xdg-open ".sboo/documentation/dictation-server/index.html"
+	xdg-open ".sboo/documentation/$(PackageName)/index.html"
+
+.PHONY: open-docs
 
 #       ^ TODO: cross-platform, use 'open' and alias it to 'xdg-open'; wildcard the platform-directory (and also the various versions), i.e.:
 #
 #           open ./dist-newstyle/build/*-*/ghc-*/*-*/noopt/doc/html/*/index.html
 #       rather than, e.g.:
 #
-#           xdg-open ./dist-newstyle/build/x86_64-linux/ghc-8.4.3/dictation-server-0.0/noopt/doc/html/dictation-server/index.html
+#           xdg-open ./dist-newstyle/build/x86_64-linux/ghc-8.4.3/$(PackageName)-0.0/noopt/doc/html/$(PackageName)/index.html
 #
 
 # ekmett:
 # 	cp -aRv dist-newstyle/build/*/*/unpacked-containers-0/doc/html/unpacked-containers/* docs
 # 	cd docs && git commit -a -m "update haddocks" && git push && cd ..
 
-########################
+#------------------------------------------------#
 docs: open-docs
 
-####################
-update:
-	cabal new-update
+.PHONY: docs
 
-####################
+#------------------------------------------------#
 watch:
 	@exec ./scripts/sboo/ghcid.sh & disown
 
-##################################################
+.PHONY: watch
+
 ##################################################
