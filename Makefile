@@ -1,15 +1,15 @@
 ##################################################
 ##################################################
-all: build
+default: build
 
 ####################
-.PHONY:	all check configure build clean docs update rebuild
+.PHONY: default all check configure build clean dictation-server natlink docs update rebuild 
 
 ##################################################
 ##################################################
-configure:
-	cabal --enable-nix new-configure --project-file ./cabal.project
-
+# configure:
+# 	cabal --enable-nix new-configure --project-file ./cabal.project
+#
 ####################
 check:
 	cabal new-build -fno-code -O0 all
@@ -20,7 +20,8 @@ compile:
 
 ####################
 repl:
-	cabal new-repl dictation-server
+#TODO	cabal new-repl all
+	cabal new-repl natlink # dictation-server
 
 # ####################
 # install:
@@ -34,6 +35,25 @@ execute:
 clean:
 	rm -rf dist/ dist-newstyle/ .sboo/
 	rm -f *.project.local .ghc.environment.*
+
+##################################################
+##################################################
+
+####################
+all:
+	cabal new-build all
+	cabal new-test  all
+
+####################
+dictation-server:
+	cabal new-build dictation-server
+	cabal new-test  dictation-server
+	cabal new-run   dictation-server-example
+
+####################
+natlink:
+	cabal new-build natlink
+	cabal new-test  natlink
 
 ##################################################
 ##################################################
@@ -58,11 +78,14 @@ build-docs: compile
 copy-docs: build-docs
 	rm -fr ".sboo/documentation/"
 	mkdir -p ".sboo/documentation/"
-	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/dictation-server-*/noopt/doc/html/dictation-server/* ".sboo/documentation/"
+	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/natlink-*/noopt/doc/html/natlink/* ".sboo/documentation/natlink"
+	cp -aRv  ./dist-newstyle/build/*-*/ghc-*/dictation-server-*/noopt/doc/html/dictation-server/* ".sboo/documentation/dictation-server"
 
 ########################
 open-docs: copy-docs
-	xdg-open ".sboo/documentation/index.html"
+#TODO	xdg-open ".sboo/documentation/index.html"
+	xdg-open ".sboo/documentation/natlink/index.html"
+	xdg-open ".sboo/documentation/dictation-server/index.html"
 
 #       ^ TODO: cross-platform, use 'open' and alias it to 'xdg-open'; wildcard the platform-directory (and also the various versions), i.e.:
 #

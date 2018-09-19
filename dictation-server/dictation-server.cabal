@@ -251,12 +251,18 @@ library
    sources
 
  exposed-modules:
+
    Dictation.Server
+
    Dictation.Server.Types
    Dictation.Server.API
    Dictation.Server.SQL
 
+   Dictation.Server.CLI
+   Dictation.Server.CLI.Types
+
  other-modules:
+
    Prelude_dictation_server
    -- Paths_dictation_server
 
@@ -270,8 +276,8 @@ library
   -- (sboosali on github, sboo on hackage)
   --------------------
 
-    spiros >=0.2
-  -- , enumerate >=0.2 
+    spiros    >=0.2
+  , enumerate >=0.2 
 
  --------------------
  -- boot libraries / "standard" library
@@ -323,13 +329,18 @@ library
   , sqlite-simple  >= 0.4.16
   , directory
   
-  
   --------------------
   -- Concurrency packages
   --------------------
 
   , async
   , parallel
+
+  --------------------
+  -- CLI packages
+  --------------------
+
+  , optparse-applicative
 
   --------------------
   -- Parsing / Formatting packages

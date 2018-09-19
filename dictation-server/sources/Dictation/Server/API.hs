@@ -17,6 +17,10 @@ import Prelude_dictation_server
 
 --------------------------------------------------
 
+import Dictation.Server.Types
+
+--------------------------------------------------
+
 import qualified "servant-server" Servant     as S
 ---import qualified "servant"        Servant.API as S
 
@@ -31,7 +35,7 @@ import qualified "servant-server" Servant     as S
 
 --------------------------------------------------
 
-import qualified "time" Data.Time as Time (UTCTime)
+--import qualified "time" Data.Time as Time (UTCTime)
 
 --------------------------------------------------
 
@@ -43,29 +47,102 @@ import qualified "time" Data.Time as Time (UTCTime)
 -- import Control.Monad.IO.Class
 
 --------------------------------------------------
+
+import "base" GHC.TypeLits (Symbol)
+
+--------------------------------------------------
 --------------------------------------------------
 
-type UserAPI
-    =               "users"
-  S.:> S.QueryParam "sortby" SortBy
-  S.:> S.Get '[S.JSON] [User]
+{- | All the APIs.
 
--------------------------------------------------
+e.g.
 
--- | a @kind@
-data SortBy
-  = Age
-  | Name
+Testing on UNIX:
 
--------------------------------------------------
+@
+$ export PORT=8888
+$ curl  -X POST  -H "Content-Type: application/json"  -d '["some","words"]'  "http://localhost:$PORT/recognition/"
+$ python -c 'import sys,os,json,urllib2; print (urllib2.urlopen(urllib2.Request("http://localhost:"+os.environ["PORT"]+"/recognition/", json.dumps(["some","words with spaces"]), {"Content-Type": "application/json"})).readline())'
+@
 
--- | 
-data User = User
-  { name              :: String
-  , age               :: Int
-  , email             :: String
-  , registration_date :: Time.UTCTime
-  }
+Testing on Windows:
+
+@
+> set PORT=8888
+> python -c "import sys,os,json,urllib2; print (urllib2.urlopen(urllib2.Request('http://localhost:'+os.environ['PORT']+'/recognition/', json.dumps(['some','words with spaces']), {'Content-Type': 'application/json'})).readline())"
+@
+
+Or run a simple test from the browser, by visiting
+(you must change the port if it's not default) the following:
+
+@
+http://localhost:8888/test
+
+or
+
+http://127.0.0.1:8888/test
+@
+
+-}
+type API
+       = RecognitionAPI
+  S.:<|> TestAPI
+
+--------------------------------------------------
+
+{-| The API for a successful recognition.
+
+@
+POST /recognition
+@
+
+-}
+
+type RecognitionAPI
+  = PostAPI "recognition" Recognition ()
+
+--------------------------------------------------
+
+{-| The API to test that the server
+
+@
+POST /test
+@
+
+-}
+
+type TestAPI
+     = "test"
+  S.:> S.Get '[S.JSON] ()
+
+--------------------------------------------------
+
+{-| Signature for a simple "foreign function",
+via @JSON@ and @HTTP@.
+
+i.e.:
+
+@
+_ :: PostAPI "..." a b
+@
+
+is like:
+
+@
+_ :: a -> IO b
+@
+
+because @POST@ requests can be "effectful".
+
+-}
+type PostAPI (s :: Symbol) (a :: *) (b :: *)
+    = s
+ S.:> S.ReqBody '[S.JSON] a
+ S.:> S.Post    '[S.JSON] b
+
+--------------------------------------------------
+
+
 
 --------------------------------------------------
 
@@ -211,6 +288,34 @@ There are also variants that do not return a 200 status code, such as for exampl
 
     type PostCreated  = Verb 'POST 201
     type PostAccepted = Verb 'POST 202
+
+ ------------------------------------------------
+
+
+{-| Signature for a simple "foreign function",
+via @JSON@ and @HTTP@.
+
+i.e.:
+
+@
+_ :: GetAPI "..." "..." a b
+@
+
+is like:
+
+@
+_ :: a -> b
+@
+
+because @GET@ requests should be "idempotent".
+
+-}
+type GetAPI (s :: Symbol) (q :: Symbol) (a :: *) (b :: *)
+    = s
+ S.:> S.QueryParam q           a
+ S.:> S.Get          '[S.JSON] b
+
+ ------------------------------------------------
 
 -------------------------------------------------}
 

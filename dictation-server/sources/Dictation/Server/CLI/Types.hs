@@ -1,0 +1,1 @@
+module Dictation.Server.CLI.Types where
