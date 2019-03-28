@@ -1,0 +1,173 @@
+==================================================
+Haskell & DLLs
+
+
+
+
+
+
+
+
+
+
+==================================================
+Python & DLLs
+
+
+
+
+(0)
+
+https://docs.python.org/2.5/lib/ctypes-loading-shared-libraries.html
+
+.
+
+The Python GIL is released before calling any function exported by these libraries, and reaquired afterwards.
+
+.
+
+All these classes can be instantiated by calling them with at least one argument, the pathname of the shared library. If you have an existing handle to an already loaded shard library, it can be passed as the handle named parameter, otherwise the underlying platforms dlopen or LoadLibrary function is used to load the library into the process, and to get a handle to it.
+
+.
+
+Instances of these classes have no public methods, however __getattr__ and __getitem__ have special behaviour: functions exported by the shared library can be accessed as attributes of by index. Please note that both __getattr__ and __getitem__ cache their result, so calling them repeatedly returns the same object each time.
+
+.
+
+load shared libraries into the Python process. One way is to instantiate one of the following classes:
+
+class CDLL(	name, mode=DEFAULT_MODE, handle=None)
+
+Instances of this class represent loaded shared libraries. Functions in these libraries use the standard C calling convention, and are assumed to return int.
+
+class OleDLL(	name, mode=DEFAULT_MODE, handle=None)
+
+Windows only: Instances of this class represent loaded shared libraries, functions in these libraries use the stdcall calling convention, and are assumed to return the windows specific HRESULT code. HRESULT values contain information specifying whether the function call failed or succeeded, together with additional error code. If the return value signals a failure, an WindowsError is automatically raised.
+
+class WinDLL(	name, mode=DEFAULT_MODE, handle=None)
+
+Windows only: Instances of this class represent loaded shared libraries, functions in these libraries use the stdcall calling convention, and are assumed to return int by default.
+On Windows CE only the standard calling convention is used, for convenience the WinDLL and OleDLL use the standard calling convention on this platform.
+
+
+.
+
+pythonapi:
+
+An instance of PyDLL that exposes Python C api functions as attributes. Note that all these functions are assumed to return C int, which is of course not always the truth, so you have to assign the correct restype attribute to use these functions.
+
+.
+
+
+
+
+
+
+
+
+
+
+
+
+(1)
+
+ a file called "libPiCam.dll" within my working directory.
+
+
+from ctypes import cdll
+
+def load(path):
+    """Load the given DLL, a standalone-Haskell shared-library. Then, initialize the Haskell runtime."""
+
+
+    dll = cdll.LoadLibrary(path)
+
+    dll.
+
+    return dll
+
+dicto = load("libHS")
+
+
+
+
+
+
+
+
+(2)
+
+Using WinDLL (and wintypes, msvcrt) is windows specific imports and does not always work, even on windows! The reason is that it depends on your python installation. Is it native Windows (or using Cygwin or WSL)?
+
+For ctypes, the more portable and correct way is to use cdll like this:
+
+
+
+import sys
+import ctypes
+from ctypes import cdll, c_ulong
+
+kFile = 'C:\\Windows\\System32\\kernel32.dll'
+mFile = 'C:\\Windows\\System32\\msvcrt.dll'
+
+try: 
+    k32    = cdll.LoadLibrary(kFile)
+    msvcrt = cdll.LoadLibrary(mFile)
+except OSError as e:
+    print("ERROR: %s" % e)
+    sys.exit(1)
+
+# do something...
+
+
+
+
+
+
+
+(3)
+
+import ctypes
+
+# Load DLL into memory.
+
+hllDll = ctypes.WinDLL ("c:\\PComm\\ehlapi32.dll")
+
+# Set up prototype and parameters for the desired function call.
+# HLLAPI
+
+hllApiProto = ctypes.WINFUNCTYPE (
+    ctypes.c_int,      # Return type.
+    ctypes.c_void_p,   # Parameters 1 ...
+    ctypes.c_void_p,
+    ctypes.c_void_p,
+    ctypes.c_void_p)   # ... thru 4.
+hllApiParams = (1, "p1", 0), (1, "p2", 0), (1, "p3",0), (1, "p4",0),
+
+# Actually map the call ("HLLAPI(...)") to a Python name.
+
+hllApi = hllApiProto (("HLLAPI", hllDll), hllApiParams)
+
+# This is how you can actually call the DLL function.
+# Set up the variables and call the Python name with them.
+
+p1 = ctypes.c_int (1)
+p2 = ctypes.c_char_p (sessionVar)
+p3 = ctypes.c_int (1)
+p4 = ctypes.c_int (0)
+hllApi (ctypes.byref (p1), p2, ctypes.byref (p3), ctypes.byref (p4))
+
+
+
+
+
+
+
+==================================================
+
+
+
+
+
+
+==================================================
